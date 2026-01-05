@@ -1,0 +1,69 @@
+* RP2350 EPaper
+
+*Control a [[https://github.com/WeActStudio/WeActStudio.EpaperModule][WeAct Studio Epaper Module]] with a [[https://www.raspberrypi.com/products/raspberry-pi-pico-2/][Raspberry Pi Pico 2 W]].*
+
+** Dependencies
+
+Clone the Pico SDK, along with its submodules.
+
+#+begin_src sh
+git clone --recurse-submodules https://github.com/raspberrypi/pico-sdk
+#+end_src
+
+Export the path as an environment variable. This will be used by the Pico SDK
+(=pico_sdk_import.cmake=).
+
+#+begin_src sh
+export PICO_SDK_PATH="$(pwd)/pico-sdk"
+#+end_src
+
+Next, download the =arm-none-eabi= version of the ARM Cross Toolchain from [[https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads][the
+official website]], selecting your host. For example:
+
+#+begin_src sh
+curl -O https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz
+tar xf arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz
+export PICO_TOOLCHAIN_PATH="$(pwd)/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi"
+#+end_src
+
+Furthermore, the =PICO_PLATFORM= environment variable must be defined to =rp2350=.
+since the default is =rp2040=.
+
+#+begin_src sh
+export PICO_PLATFORM='rp2350'
+#+end_src
+
+Note that most of these export can be avoided by launching =cmake= with the
+=-DVARIABLE=VALUE= syntax, replacing =VARIABLE= and =ARGUMENT=.
+
+** Hardware connections
+
+| Epaper module | RP2350        |
+|---------------+---------------|
+| VCC           | 3V3 (Pin 36)  |
+| GND           | GND (Pin 38)  |
+| SDA (DIN)     | GP11 (Pin 15) |
+| SCL (CLK)     | GP10 (Pin 14) |
+| CS            | GP9 (Pin 12)  |
+| DC            | GP8 (Pin 11)  |
+| RES           | GP12 (Pin 16) |
+| BUSY          | GP13 (Pin 17) |
+
+#+begin_comment org
+TODO: Add image.
+#+end_comment
+
+** Building
+
+Build the project with CMake.
+
+#+begin_src sh
+mkdir build
+cd build
+cmake ..
+#+end_src
+
+Then, connect the MicroUSB port of the Raspberry Pi Pico to your computer while
+holding its button, and copy the generated =.uf2= file to the mass storage device.
+
+The board should flash and restart.
