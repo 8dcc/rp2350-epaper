@@ -38,6 +38,8 @@ Note that most of these export can be avoided by launching =cmake= with the
 
 ** Hardware connections
 
+The examples in this repository expect the following hardware connections.
+
 | Epaper module | RP2350        |
 |---------------+---------------|
 | VCC           | 3V3 (Pin 36)  |
@@ -52,6 +54,9 @@ Note that most of these export can be avoided by launching =cmake= with the
 #+begin_comment org
 TODO: Add image.
 #+end_comment
+
+Note, however, that the library doesn't assume any of these pins, and a
+different configuration can be provided to the initialization function.
 
 ** Building
 
