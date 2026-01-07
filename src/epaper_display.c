@@ -88,8 +88,14 @@ static bool epd_init_spi(const epd_ctx_t* ctx) {
 static bool epd_init_display_funcs(epd_ctx_t* ctx) {
     switch (ctx->model) {
         case EPD_MODEL_2IN9: {
-            ctx->width = 128;
+            ctx->width  = 128;
             ctx->height = 296;
+
+            /* The monochrome display uses 1 bit per pixel, so we divide by 8 */
+            ctx->framebuffer_size = ctx->width * ctx->height / 8;
+            ctx->framebuffer = malloc(ctx->framebuffer_size);
+            if (ctx->framebuffer == NULL)
+                return false;
 
             ctx->display_funcs.init_display     = epd_2in9_init_display;
             ctx->display_funcs.reset            = epd_2in9_reset;

@@ -27,8 +27,8 @@
  * Color definitions for an E-Paper Display.
  */
 enum EEpdColors {
-    EPD_COLOR_BLACK = 0x00,
-    EPD_COLOR_WHITE = 0xFF,
+    EPD_COLOR_BLACK,
+    EPD_COLOR_WHITE,
 };
 
 /*
@@ -116,12 +116,24 @@ struct epd_ctx {
     /* Identificator for the display model of the current context */
     enum EEpdModels model;
 
-    /* Width and height of the current model */
+    /*
+     * Width and height of the display. Assigned in 'epd_init', depending on the
+     * selected model.
+     */
     size_t width, height;
 
     /*
+     * Framebuffer with pixel information. Allocated dynamically in 'epd_init',
+     * depending on the selected model.
+     */
+    uint8_t* framebuffer;
+
+    /* Size of the allocated framebuffer, in bytes */
+    size_t framebuffer_size;
+
+    /*
      * List of functions that affect this specific model. Assigned in
-     * 'epd_init', depending on the model.
+     * 'epd_init', depending on the selected model.
      */
     epd_display_funcs_t display_funcs;
 };

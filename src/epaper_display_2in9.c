@@ -54,9 +54,6 @@
 
 /*----------------------------------------------------------------------------*/
 
-/* Framebuffer */
-static uint8_t framebuffer[EPD_WIDTH * EPD_HEIGHT / 8];
-
 /* Simple 5x7 font */
 static const uint8_t font5x7[][5] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00 }, /* space */
@@ -229,7 +226,7 @@ bool epd_2in9_init_display(const epd_ctx_t* ctx) {
     epd_utils_send_data(ctx, 0x80);
 
     /* Clear framebuffer */
-    memset(framebuffer, 0xFF, sizeof(framebuffer));
+    memset(ctx->framebuffer, 0xFF, ctx->framebuffer_size);
 
     return true;
 }
@@ -253,7 +250,7 @@ void epd_2in9_flush(const epd_ctx_t* ctx) {
     epd_2in9_set_cursor(ctx, 0, 0);
 
     epd_utils_send_command(ctx, EPD_CMD_WRITE_RAM);
-    epd_utils_send_data_buffer(ctx, framebuffer, sizeof(framebuffer));
+    epd_utils_send_data_buffer(ctx, ctx->framebuffer, ctx->framebuffer_size);
 
     epd_utils_send_command(ctx, EPD_CMD_DISPLAY_UPDATE_CONTROL_2);
     epd_utils_send_data(ctx, 0xF7); /* Full update with LUT from register */
@@ -268,8 +265,23 @@ void epd_2in9_sleep(const epd_ctx_t* ctx) {
 }
 
 void epd_2in9_fill(const epd_ctx_t* ctx, uint8_t color) {
-    (void)ctx; /* Unused for now */
-    memset(framebuffer, color, sizeof(framebuffer));
+    uint8_t fill_value;
+
+    switch (color) {
+        case EPD_COLOR_BLACK:
+            fill_value = 0x00;
+            break;
+
+        case EPD_COLOR_WHITE:
+            fill_value = 0xFF;
+            break;
+
+        default:
+            EPD_LOG("Invalid color enumerator (%d).", color);
+            return;
+    }
+
+    memset(ctx->framebuffer, fill_value, ctx->framebuffer_size);
 }
 
 void epd_2in9_draw_pixel(const epd_ctx_t* ctx,
@@ -282,10 +294,19 @@ void epd_2in9_draw_pixel(const epd_ctx_t* ctx,
     uint32_t addr = (x / 8) + y * (ctx->width / 8);
     uint8_t bit   = 7 - (x % 8);
 
-    if (color == EPD_COLOR_BLACK)
-        framebuffer[addr] &= ~(1 << bit);
-    else
-        framebuffer[addr] |= (1 << bit);
+    switch (color) {
+        case EPD_COLOR_BLACK:
+            ctx->framebuffer[addr] &= ~(1 << bit);
+            break;
+
+        case EPD_COLOR_WHITE:
+            ctx->framebuffer[addr] |= (1 << bit);
+            break;
+
+        default:
+            EPD_LOG("Invalid color enumerator (%d).", color);
+            return;
+    }
 }
 
 void epd_2in9_draw_line(const epd_ctx_t* ctx,
