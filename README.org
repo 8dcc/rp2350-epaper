@@ -51,9 +51,7 @@ The examples in this repository expect the following hardware connections.
 | RES           | GP12 (Pin 16) |
 | BUSY          | GP13 (Pin 17) |
 
-#+begin_comment org
-TODO: Add image.
-#+end_comment
+[[file:assets/pin_connections.png]]
 
 Note, however, that the library doesn't assume any of these pins, and a
 different configuration can be provided to the initialization function.
