@@ -2,6 +2,8 @@
 
 *Control a [[https://github.com/WeActStudio/WeActStudio.EpaperModule][WeAct Studio Epaper Module]] with a [[https://www.raspberrypi.com/products/raspberry-pi-pico-2/][Raspberry Pi Pico 2 W]].*
 
+[[file:assets/bitmap_image.png]]
+
 ** Dependencies
 
 Clone the Pico SDK, along with its submodules.
