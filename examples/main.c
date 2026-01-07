@@ -35,7 +35,7 @@
 
 static void demo_text(epd_ctx_t* ctx) {
     printf("Drawing text...\n");
-    epd_fill(ctx, EPD_COLOR_WHITE);
+    epd_clear(ctx, EPD_COLOR_WHITE);
     epd_draw_str(ctx, 10, 10, "Hello Pico 2 W", EPD_COLOR_BLACK);
     epd_draw_str(ctx, 10, 30, "WeAct 2.9\" EPD", EPD_COLOR_BLACK);
     epd_draw_str(ctx, 10, 50, "296x128 pixels", EPD_COLOR_BLACK);
@@ -45,7 +45,7 @@ static void demo_text(epd_ctx_t* ctx) {
 
 static void demo_shapes(epd_ctx_t* ctx) {
     printf("Drawing shapes...\n");
-    epd_fill(ctx, EPD_COLOR_WHITE);
+    epd_clear(ctx, EPD_COLOR_WHITE);
 
     /* Rectangle */
     epd_draw_rect(ctx, 10, 10, 50, 30, EPD_COLOR_BLACK);
@@ -64,7 +64,7 @@ static void demo_shapes(epd_ctx_t* ctx) {
 
 static void demo_pattern(epd_ctx_t* ctx) {
     printf("Drawing pixel pattern...\n");
-    epd_fill(ctx, EPD_COLOR_WHITE);
+    epd_clear(ctx, EPD_COLOR_WHITE);
 
     for (uint16_t i = 0; i < ctx->width; i += 4) {
         for (uint16_t j = 0; j < 128; j += 4) {
@@ -81,7 +81,7 @@ static void demo_animation(epd_ctx_t* ctx) {
     printf("Running animation...\n");
 
     for (int i = 0; i < 5; i++) {
-        epd_fill(ctx, EPD_COLOR_WHITE);
+        epd_clear(ctx, EPD_COLOR_WHITE);
 
         /* Moving rectangle */
         uint16_t x = i * 20;
@@ -122,6 +122,7 @@ int main(void) {
     /* Clear display */
     printf("Clearing display...\n");
     epd_clear(&display_ctx, EPD_COLOR_WHITE);
+    epd_flush(&display_ctx);
     sleep_ms(2000);
 
     /* Run demos */
@@ -132,10 +133,11 @@ int main(void) {
 
     /* Final screen */
     printf("Displaying final screen...\n");
-    epd_fill(&display_ctx, EPD_COLOR_WHITE);
+    epd_clear(&display_ctx, EPD_COLOR_WHITE);
     epd_draw_str(&display_ctx, 20, 50, "Demo Complete", EPD_COLOR_BLACK);
-    epd_draw_str(&display_ctx, 20, 70, "Press RESET to", EPD_COLOR_BLACK);
-    epd_draw_str(&display_ctx, 20, 90, "run again", EPD_COLOR_BLACK);
+    epd_draw_str(&display_ctx, 20, 65, "Press RESET to", EPD_COLOR_BLACK);
+    epd_draw_str(&display_ctx, 20, 80, "run again", EPD_COLOR_BLACK);
+    epd_draw_str(&display_ctx, 8, 100, "(8dcc/rp2350-epaper)", EPD_COLOR_BLACK);
     epd_flush(&display_ctx);
 
     /* Put display to sleep */

@@ -240,11 +240,6 @@ void epd_2in9_reset(const epd_ctx_t* ctx) {
     sleep_ms(200);
 }
 
-void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color) {
-    epd_2in9_fill(ctx, color);
-    epd_2in9_flush(ctx);
-}
-
 void epd_2in9_flush(const epd_ctx_t* ctx) {
     epd_2in9_set_window(ctx, 0, 0, ctx->width - 1, ctx->height - 1);
     epd_2in9_set_cursor(ctx, 0, 0);
@@ -264,7 +259,7 @@ void epd_2in9_sleep(const epd_ctx_t* ctx) {
     epd_utils_send_data(ctx, 0x01);
 }
 
-void epd_2in9_fill(const epd_ctx_t* ctx, uint8_t color) {
+void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color) {
     uint8_t fill_value;
 
     switch (color) {

@@ -34,7 +34,6 @@ bool epd_2in9_init_display(const epd_ctx_t* ctx);
  * information.
  */
 void epd_2in9_reset(const epd_ctx_t* ctx);
-void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color);
 void epd_2in9_flush(const epd_ctx_t* ctx);
 void epd_2in9_sleep(const epd_ctx_t* ctx);
 
@@ -42,7 +41,7 @@ void epd_2in9_sleep(const epd_ctx_t* ctx);
  * Model-specific drawing functions. See the 'epaper_display.h' header for more
  * information.
  */
-void epd_2in9_fill(const epd_ctx_t* ctx, uint8_t color);
+void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color);
 void epd_2in9_draw_pixel(const epd_ctx_t* ctx, uint16_t x, uint16_t y, uint8_t color);
 void epd_2in9_draw_line(const epd_ctx_t* ctx,
                         uint16_t x0,

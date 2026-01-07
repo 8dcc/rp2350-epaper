@@ -65,12 +65,11 @@ struct epd_display_funcs {
 
     /* Control functions */
     void (*reset)(const epd_ctx_t* ctx);
-    void (*clear)(const epd_ctx_t* ctx, uint8_t color);
     void (*flush)(const epd_ctx_t* ctx);
     void (*sleep)(const epd_ctx_t* ctx);
 
     /* Drawing functions */
-    void (*fill)(const epd_ctx_t* ctx, uint8_t color);
+    void (*clear)(const epd_ctx_t* ctx, uint8_t color);
     void (*draw_pixel)(const epd_ctx_t* ctx,
                        uint16_t x,
                        uint16_t y,
@@ -156,15 +155,6 @@ static inline void epd_reset(const epd_ctx_t* ctx) {
 }
 
 /*
- * Clear the display to specified color
- *
- * FIXME: Use 'enum EEpdColors' instead of 'uint8_t'.
- */
-static inline void epd_clear(const epd_ctx_t* ctx, uint8_t color) {
-    ctx->display_funcs.clear(ctx, color);
-}
-
-/*
  * Update the display with current framebuffer content
  */
 static inline void epd_flush(const epd_ctx_t* ctx) {
@@ -179,10 +169,12 @@ static inline void epd_sleep(const epd_ctx_t* ctx) {
 }
 
 /*
- * Fill entire framebuffer with color
+ * Clear the display to specified color
+ *
+ * FIXME: Use 'enum EEpdColors' instead of 'uint8_t'.
  */
-static inline void epd_fill(const epd_ctx_t* ctx, uint8_t color) {
-    ctx->display_funcs.fill(ctx, color);
+static inline void epd_clear(const epd_ctx_t* ctx, uint8_t color) {
+    ctx->display_funcs.clear(ctx, color);
 }
 
 /*

@@ -85,7 +85,7 @@ static bool epd_init_spi(const epd_ctx_t* ctx) {
  * Initialize the device-specific display functions depending on the stored
  * model.
  */
-static bool epd_init_display_funcs(epd_ctx_t* ctx) {
+static bool epd_init_model_properties(epd_ctx_t* ctx) {
     switch (ctx->model) {
         case EPD_MODEL_2IN9: {
             ctx->width  = 128;
@@ -99,10 +99,9 @@ static bool epd_init_display_funcs(epd_ctx_t* ctx) {
 
             ctx->display_funcs.init_display     = epd_2in9_init_display;
             ctx->display_funcs.reset            = epd_2in9_reset;
-            ctx->display_funcs.clear            = epd_2in9_clear;
             ctx->display_funcs.flush            = epd_2in9_flush;
             ctx->display_funcs.sleep            = epd_2in9_sleep;
-            ctx->display_funcs.fill             = epd_2in9_fill;
+            ctx->display_funcs.clear            = epd_2in9_clear;
             ctx->display_funcs.draw_pixel       = epd_2in9_draw_pixel;
             ctx->display_funcs.draw_line        = epd_2in9_draw_line;
             ctx->display_funcs.draw_rect        = epd_2in9_draw_rect;
@@ -133,10 +132,11 @@ bool epd_init(epd_ctx_t* ctx,
         return false;
 
     /*
-     * Assign the current display model, and initialize its specific functions.
+     * Assign the current display model, and assign its specific data/functions
+     * in the context.
      */
     ctx->model = model;
-    if (!epd_init_display_funcs(ctx))
+    if (!epd_init_model_properties(ctx))
         return false;
 
     /*
