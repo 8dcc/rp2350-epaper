@@ -57,13 +57,6 @@
 /* Framebuffer */
 static uint8_t framebuffer[EPD_WIDTH * EPD_HEIGHT / 8];
 
-/* LUT for full refresh (from WeAct Studio / Waveshare examples) */
-static const uint8_t lut_full_update[] = { 0x50, 0xAA, 0x55, 0xAA, 0x11, 0x00,
-                                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                           0x00, 0x00, 0xFF, 0xFF, 0x1F, 0x00,
-                                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-
 /* Simple 5x7 font */
 static const uint8_t font5x7[][5] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00 }, /* space */
@@ -161,20 +154,23 @@ static const uint8_t font5x7[][5] = {
 
 /*----------------------------------------------------------------------------*/
 
-void epd_2in9_reset(epd_ctx_t* ctx) {
-    gpio_put(ctx->pins.res, 1);
-    sleep_ms(200);
-    gpio_put(ctx->pins.res, 0);
-    sleep_ms(5);
-    gpio_put(ctx->pins.res, 1);
-    sleep_ms(200);
+static void epd_2in9_load_lut(epd_ctx_t* ctx) {
+    /* LUT for full refresh (from WeAct Studio / Waveshare examples) */
+    static const uint8_t lut_full_update[] = {
+        0x50, 0xAA, 0x55, 0xAA, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xFF, 0xFF, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    };
+
+    epd_utils_send_command(ctx, EPD_CMD_WRITE_LUT_REGISTER);
+    epd_utils_send_data_buffer(ctx, lut_full_update, sizeof(lut_full_update));
 }
 
-static void epd_set_window(epd_ctx_t* ctx,
-                           uint16_t x_start,
-                           uint16_t y_start,
-                           uint16_t x_end,
-                           uint16_t y_end) {
+static void epd_2in9_set_window(epd_ctx_t* ctx,
+                                uint16_t x_start,
+                                uint16_t y_start,
+                                uint16_t x_end,
+                                uint16_t y_end) {
     epd_utils_send_command(ctx, EPD_CMD_SET_RAM_X_ADDRESS_START_END);
     epd_utils_send_data(ctx, (x_start >> 3) & 0xFF);
     epd_utils_send_data(ctx, (x_end >> 3) & 0xFF);
@@ -186,18 +182,13 @@ static void epd_set_window(epd_ctx_t* ctx,
     epd_utils_send_data(ctx, (y_end >> 8) & 0xFF);
 }
 
-static void epd_set_cursor(epd_ctx_t* ctx, uint16_t x, uint16_t y) {
+static void epd_2in9_set_cursor(epd_ctx_t* ctx, uint16_t x, uint16_t y) {
     epd_utils_send_command(ctx, EPD_CMD_SET_RAM_X_ADDRESS_COUNTER);
     epd_utils_send_data(ctx, (x >> 3) & 0xFF);
 
     epd_utils_send_command(ctx, EPD_CMD_SET_RAM_Y_ADDRESS_COUNTER);
     epd_utils_send_data(ctx, y & 0xFF);
     epd_utils_send_data(ctx, (y >> 8) & 0xFF);
-}
-
-static void epd_load_lut(epd_ctx_t* ctx) {
-    epd_utils_send_command(ctx, EPD_CMD_WRITE_LUT_REGISTER);
-    epd_utils_send_data_buffer(ctx, lut_full_update, sizeof(lut_full_update));
 }
 
 bool epd_2in9_init_display(epd_ctx_t* ctx) {
@@ -231,7 +222,7 @@ bool epd_2in9_init_display(epd_ctx_t* ctx) {
     epd_utils_send_data(ctx, 0x03);
 
     /* Load the LUT (Look-Up Table) for display refresh waveform */
-    epd_load_lut(ctx);
+    epd_2in9_load_lut(ctx);
 
     epd_utils_send_command(ctx, EPD_CMD_DISPLAY_UPDATE_CONTROL_1);
     epd_utils_send_data(ctx, 0x00);
@@ -243,14 +234,23 @@ bool epd_2in9_init_display(epd_ctx_t* ctx) {
     return true;
 }
 
+void epd_2in9_reset(epd_ctx_t* ctx) {
+    gpio_put(ctx->pins.res, 1);
+    sleep_ms(200);
+    gpio_put(ctx->pins.res, 0);
+    sleep_ms(5);
+    gpio_put(ctx->pins.res, 1);
+    sleep_ms(200);
+}
+
 void epd_2in9_clear(epd_ctx_t* ctx, uint8_t color) {
     epd_2in9_fill(ctx, color);
     epd_2in9_flush(ctx);
 }
 
 void epd_2in9_flush(epd_ctx_t* ctx) {
-    epd_set_window(ctx, 0, 0, ctx->width - 1, ctx->height - 1);
-    epd_set_cursor(ctx, 0, 0);
+    epd_2in9_set_window(ctx, 0, 0, ctx->width - 1, ctx->height - 1);
+    epd_2in9_set_cursor(ctx, 0, 0);
 
     epd_utils_send_command(ctx, EPD_CMD_WRITE_RAM);
     epd_utils_send_data_buffer(ctx, framebuffer, sizeof(framebuffer));
