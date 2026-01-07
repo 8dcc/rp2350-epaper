@@ -61,41 +61,44 @@ struct epd_pin_config {
  */
 struct epd_display_funcs {
     /* Initialization functions */
-    bool (*init_display)(epd_ctx_t* ctx);
+    bool (*init_display)(const epd_ctx_t* ctx);
 
     /* Control functions */
-    void (*reset)(epd_ctx_t* ctx);
-    void (*clear)(epd_ctx_t* ctx, uint8_t color);
-    void (*flush)(epd_ctx_t* ctx);
-    void (*sleep)(epd_ctx_t* ctx);
+    void (*reset)(const epd_ctx_t* ctx);
+    void (*clear)(const epd_ctx_t* ctx, uint8_t color);
+    void (*flush)(const epd_ctx_t* ctx);
+    void (*sleep)(const epd_ctx_t* ctx);
 
     /* Drawing functions */
-    void (*fill)(epd_ctx_t* ctx, uint8_t color);
-    void (*draw_pixel)(epd_ctx_t* ctx, uint16_t x, uint16_t y, uint8_t color);
-    void (*draw_line)(epd_ctx_t* ctx,
+    void (*fill)(const epd_ctx_t* ctx, uint8_t color);
+    void (*draw_pixel)(const epd_ctx_t* ctx,
+                       uint16_t x,
+                       uint16_t y,
+                       uint8_t color);
+    void (*draw_line)(const epd_ctx_t* ctx,
                       uint16_t x0,
                       uint16_t y0,
                       uint16_t x1,
                       uint16_t y1,
                       uint8_t color);
-    void (*draw_rect)(epd_ctx_t* ctx,
+    void (*draw_rect)(const epd_ctx_t* ctx,
                       uint16_t x,
                       uint16_t y,
                       uint16_t width,
                       uint16_t height,
                       uint8_t color);
-    void (*draw_filled_rect)(epd_ctx_t* ctx,
+    void (*draw_filled_rect)(const epd_ctx_t* ctx,
                              uint16_t x,
                              uint16_t y,
                              uint16_t width,
                              uint16_t height,
                              uint8_t color);
-    void (*draw_char)(epd_ctx_t* ctx,
+    void (*draw_char)(const epd_ctx_t* ctx,
                       uint16_t x,
                       uint16_t y,
                       char c,
                       uint8_t color);
-    void (*draw_str)(epd_ctx_t* ctx,
+    void (*draw_str)(const epd_ctx_t* ctx,
                      uint16_t x,
                      uint16_t y,
                      const char* str,
@@ -136,7 +139,7 @@ bool epd_init(epd_ctx_t* ctx,
 /*
  * Reset the display
  */
-static inline void epd_reset(epd_ctx_t* ctx) {
+static inline void epd_reset(const epd_ctx_t* ctx) {
     ctx->display_funcs.reset(ctx);
 }
 
@@ -145,35 +148,35 @@ static inline void epd_reset(epd_ctx_t* ctx) {
  *
  * FIXME: Use 'enum EEpdColors' instead of 'uint8_t'.
  */
-static inline void epd_clear(epd_ctx_t* ctx, uint8_t color) {
+static inline void epd_clear(const epd_ctx_t* ctx, uint8_t color) {
     ctx->display_funcs.clear(ctx, color);
 }
 
 /*
  * Update the display with current framebuffer content
  */
-static inline void epd_flush(epd_ctx_t* ctx) {
+static inline void epd_flush(const epd_ctx_t* ctx) {
     ctx->display_funcs.flush(ctx);
 }
 
 /*
  * Put display into deep sleep mode
  */
-static inline void epd_sleep(epd_ctx_t* ctx) {
+static inline void epd_sleep(const epd_ctx_t* ctx) {
     ctx->display_funcs.sleep(ctx);
 }
 
 /*
  * Fill entire framebuffer with color
  */
-static inline void epd_fill(epd_ctx_t* ctx, uint8_t color) {
+static inline void epd_fill(const epd_ctx_t* ctx, uint8_t color) {
     ctx->display_funcs.fill(ctx, color);
 }
 
 /*
  * Set a pixel at (x, y) to specified color
  */
-static inline void epd_draw_pixel(epd_ctx_t* ctx,
+static inline void epd_draw_pixel(const epd_ctx_t* ctx,
                                   uint16_t x,
                                   uint16_t y,
                                   uint8_t color) {
@@ -183,7 +186,7 @@ static inline void epd_draw_pixel(epd_ctx_t* ctx,
 /*
  * Draw a line from (x0, y0) to (x1, y1)
  */
-static inline void epd_draw_line(epd_ctx_t* ctx,
+static inline void epd_draw_line(const epd_ctx_t* ctx,
                                  uint16_t x0,
                                  uint16_t y0,
                                  uint16_t x1,
@@ -195,7 +198,7 @@ static inline void epd_draw_line(epd_ctx_t* ctx,
 /*
  * Draw a rectangle
  */
-static inline void epd_draw_rect(epd_ctx_t* ctx,
+static inline void epd_draw_rect(const epd_ctx_t* ctx,
                                  uint16_t x,
                                  uint16_t y,
                                  uint16_t width,
@@ -207,7 +210,7 @@ static inline void epd_draw_rect(epd_ctx_t* ctx,
 /*
  * Draw a filled rectangle
  */
-static inline void epd_draw_filled_rect(epd_ctx_t* ctx,
+static inline void epd_draw_filled_rect(const epd_ctx_t* ctx,
                                         uint16_t x,
                                         uint16_t y,
                                         uint16_t width,
@@ -219,7 +222,7 @@ static inline void epd_draw_filled_rect(epd_ctx_t* ctx,
 /*
  * Draw a character at (x, y)
  */
-static inline void epd_draw_char(epd_ctx_t* ctx,
+static inline void epd_draw_char(const epd_ctx_t* ctx,
                                  uint16_t x,
                                  uint16_t y,
                                  char c,
@@ -230,7 +233,7 @@ static inline void epd_draw_char(epd_ctx_t* ctx,
 /*
  * Draw a string at (x, y)
  */
-static inline void epd_draw_str(epd_ctx_t* ctx,
+static inline void epd_draw_str(const epd_ctx_t* ctx,
                                 uint16_t x,
                                 uint16_t y,
                                 const char* str,

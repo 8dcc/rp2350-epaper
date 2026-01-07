@@ -27,47 +27,47 @@
 /*
  * Initialization function for a 2.9" E-Paper Display.
  */
-bool epd_2in9_init_display(epd_ctx_t* ctx);
+bool epd_2in9_init_display(const epd_ctx_t* ctx);
 
 /*
  * Model-specific control functions. See the 'epaper_display.h' header for more
  * information.
  */
-void epd_2in9_reset(epd_ctx_t* ctx);
-void epd_2in9_clear(epd_ctx_t* ctx, uint8_t color);
-void epd_2in9_flush(epd_ctx_t* ctx);
-void epd_2in9_sleep(epd_ctx_t* ctx);
+void epd_2in9_reset(const epd_ctx_t* ctx);
+void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color);
+void epd_2in9_flush(const epd_ctx_t* ctx);
+void epd_2in9_sleep(const epd_ctx_t* ctx);
 
 /*
  * Model-specific drawing functions. See the 'epaper_display.h' header for more
  * information.
  */
-void epd_2in9_fill(epd_ctx_t* ctx, uint8_t color);
-void epd_2in9_draw_pixel(epd_ctx_t* ctx, uint16_t x, uint16_t y, uint8_t color);
-void epd_2in9_draw_line(epd_ctx_t* ctx,
+void epd_2in9_fill(const epd_ctx_t* ctx, uint8_t color);
+void epd_2in9_draw_pixel(const epd_ctx_t* ctx, uint16_t x, uint16_t y, uint8_t color);
+void epd_2in9_draw_line(const epd_ctx_t* ctx,
                         uint16_t x0,
                         uint16_t y0,
                         uint16_t x1,
                         uint16_t y1,
                         uint8_t color);
-void epd_2in9_draw_rect(epd_ctx_t* ctx,
+void epd_2in9_draw_rect(const epd_ctx_t* ctx,
                         uint16_t x,
                         uint16_t y,
                         uint16_t width,
                         uint16_t height,
                         uint8_t color);
-void epd_2in9_draw_filled_rect(epd_ctx_t* ctx,
+void epd_2in9_draw_filled_rect(const epd_ctx_t* ctx,
                                uint16_t x,
                                uint16_t y,
                                uint16_t width,
                                uint16_t height,
                                uint8_t color);
-void epd_2in9_draw_char(epd_ctx_t* ctx,
+void epd_2in9_draw_char(const epd_ctx_t* ctx,
                         uint16_t x,
                         uint16_t y,
                         char c,
                         uint8_t color);
-void epd_2in9_draw_str(epd_ctx_t* ctx,
+void epd_2in9_draw_str(const epd_ctx_t* ctx,
                        uint16_t x,
                        uint16_t y,
                        const char* str,

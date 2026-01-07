@@ -154,7 +154,7 @@ static const uint8_t font5x7[][5] = {
 
 /*----------------------------------------------------------------------------*/
 
-static void epd_2in9_load_lut(epd_ctx_t* ctx) {
+static void epd_2in9_load_lut(const epd_ctx_t* ctx) {
     /* LUT for full refresh (from WeAct Studio / Waveshare examples) */
     static const uint8_t lut_full_update[] = {
         0x50, 0xAA, 0x55, 0xAA, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -166,7 +166,7 @@ static void epd_2in9_load_lut(epd_ctx_t* ctx) {
     epd_utils_send_data_buffer(ctx, lut_full_update, sizeof(lut_full_update));
 }
 
-static void epd_2in9_set_window(epd_ctx_t* ctx,
+static void epd_2in9_set_window(const epd_ctx_t* ctx,
                                 uint16_t x_start,
                                 uint16_t y_start,
                                 uint16_t x_end,
@@ -182,7 +182,7 @@ static void epd_2in9_set_window(epd_ctx_t* ctx,
     epd_utils_send_data(ctx, (y_end >> 8) & 0xFF);
 }
 
-static void epd_2in9_set_cursor(epd_ctx_t* ctx, uint16_t x, uint16_t y) {
+static void epd_2in9_set_cursor(const epd_ctx_t* ctx, uint16_t x, uint16_t y) {
     epd_utils_send_command(ctx, EPD_CMD_SET_RAM_X_ADDRESS_COUNTER);
     epd_utils_send_data(ctx, (x >> 3) & 0xFF);
 
@@ -191,7 +191,7 @@ static void epd_2in9_set_cursor(epd_ctx_t* ctx, uint16_t x, uint16_t y) {
     epd_utils_send_data(ctx, (y >> 8) & 0xFF);
 }
 
-bool epd_2in9_init_display(epd_ctx_t* ctx) {
+bool epd_2in9_init_display(const epd_ctx_t* ctx) {
     /* Reset and initialize display */
     epd_2in9_reset(ctx);
 
@@ -234,7 +234,7 @@ bool epd_2in9_init_display(epd_ctx_t* ctx) {
     return true;
 }
 
-void epd_2in9_reset(epd_ctx_t* ctx) {
+void epd_2in9_reset(const epd_ctx_t* ctx) {
     gpio_put(ctx->pins.res, 1);
     sleep_ms(200);
     gpio_put(ctx->pins.res, 0);
@@ -243,12 +243,12 @@ void epd_2in9_reset(epd_ctx_t* ctx) {
     sleep_ms(200);
 }
 
-void epd_2in9_clear(epd_ctx_t* ctx, uint8_t color) {
+void epd_2in9_clear(const epd_ctx_t* ctx, uint8_t color) {
     epd_2in9_fill(ctx, color);
     epd_2in9_flush(ctx);
 }
 
-void epd_2in9_flush(epd_ctx_t* ctx) {
+void epd_2in9_flush(const epd_ctx_t* ctx) {
     epd_2in9_set_window(ctx, 0, 0, ctx->width - 1, ctx->height - 1);
     epd_2in9_set_cursor(ctx, 0, 0);
 
@@ -262,17 +262,17 @@ void epd_2in9_flush(epd_ctx_t* ctx) {
     epd_utils_wait_until_idle(ctx);
 }
 
-void epd_2in9_sleep(epd_ctx_t* ctx) {
+void epd_2in9_sleep(const epd_ctx_t* ctx) {
     epd_utils_send_command(ctx, EPD_CMD_DEEP_SLEEP_MODE);
     epd_utils_send_data(ctx, 0x01);
 }
 
-void epd_2in9_fill(epd_ctx_t* ctx, uint8_t color) {
+void epd_2in9_fill(const epd_ctx_t* ctx, uint8_t color) {
     (void)ctx; /* Unused for now */
     memset(framebuffer, color, sizeof(framebuffer));
 }
 
-void epd_2in9_draw_pixel(epd_ctx_t* ctx,
+void epd_2in9_draw_pixel(const epd_ctx_t* ctx,
                          uint16_t x,
                          uint16_t y,
                          uint8_t color) {
@@ -288,7 +288,7 @@ void epd_2in9_draw_pixel(epd_ctx_t* ctx,
         framebuffer[addr] |= (1 << bit);
 }
 
-void epd_2in9_draw_line(epd_ctx_t* ctx,
+void epd_2in9_draw_line(const epd_ctx_t* ctx,
                         uint16_t x0,
                         uint16_t y0,
                         uint16_t x1,
@@ -318,7 +318,7 @@ void epd_2in9_draw_line(epd_ctx_t* ctx,
     }
 }
 
-void epd_2in9_draw_rect(epd_ctx_t* ctx,
+void epd_2in9_draw_rect(const epd_ctx_t* ctx,
                         uint16_t x,
                         uint16_t y,
                         uint16_t width,
@@ -340,7 +340,7 @@ void epd_2in9_draw_rect(epd_ctx_t* ctx,
     epd_2in9_draw_line(ctx, x, y + height - 1, x, y, color);
 }
 
-void epd_2in9_draw_filled_rect(epd_ctx_t* ctx,
+void epd_2in9_draw_filled_rect(const epd_ctx_t* ctx,
                                uint16_t x,
                                uint16_t y,
                                uint16_t width,
@@ -351,7 +351,7 @@ void epd_2in9_draw_filled_rect(epd_ctx_t* ctx,
             epd_2in9_draw_pixel(ctx, x + j, y + i, color);
 }
 
-void epd_2in9_draw_char(epd_ctx_t* ctx,
+void epd_2in9_draw_char(const epd_ctx_t* ctx,
                         uint16_t x,
                         uint16_t y,
                         char c,
@@ -372,7 +372,7 @@ void epd_2in9_draw_char(epd_ctx_t* ctx,
     }
 }
 
-void epd_2in9_draw_str(epd_ctx_t* ctx,
+void epd_2in9_draw_str(const epd_ctx_t* ctx,
                        uint16_t x,
                        uint16_t y,
                        const char* str,
