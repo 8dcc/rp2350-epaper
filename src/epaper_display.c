@@ -25,13 +25,7 @@
 #include "hardware/spi.h"
 
 #include "epaper_display_2in9.h"
-
-#define EPD_LOG(...)                                                           \
-    do {                                                                       \
-        printf("[EPD] ");                                                      \
-        printf(__VA_ARGS__);                                                   \
-        putchar('\n');                                                         \
-    } while (0)
+#include "epaper_display_utils.h"
 
 /*----------------------------------------------------------------------------*/
 

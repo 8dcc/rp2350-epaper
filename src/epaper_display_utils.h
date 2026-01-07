@@ -20,8 +20,21 @@
 #define EPAPER_DISPLAY_UTILS_H_ 1
 
 #include <stddef.h>
+#include <stdio.h>
 
 #include "epaper_display.h"
+
+/*
+ * Log a message to standard output.
+ */
+#define EPD_LOG(...)                                                           \
+    do {                                                                       \
+        printf("[EPD] ");                                                      \
+        printf(__VA_ARGS__);                                                   \
+        putchar('\n');                                                         \
+    } while (0)
+
+/*----------------------------------------------------------------------------*/
 
 /*
  * Write the specified byte array to through the SPI pins associated to the
@@ -38,6 +51,8 @@ void epd_utils_send_command(const epd_ctx_t* ctx, uint8_t cmd);
 /*
  * Write the specified data byte to through the SPI pins associated to the
  * specified E-Paper Display context.
+ *
+ * FIXME: Rename to 'epd_utils_send_data_byte'.
  */
 void epd_utils_send_data(const epd_ctx_t* ctx, uint8_t data);
 
