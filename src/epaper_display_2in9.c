@@ -250,11 +250,10 @@ void epd_2in9_draw_pixel(epd_ctx_t* ctx,
     uint32_t addr = (x / 8) + y * (ctx->width / 8);
     uint8_t bit   = 7 - (x % 8);
 
-    if (color == EPD_COLOR_BLACK) {
+    if (color == EPD_COLOR_BLACK)
         framebuffer[addr] &= ~(1 << bit);
-    } else {
+    else
         framebuffer[addr] |= (1 << bit);
-    }
 }
 
 void epd_2in9_draw_line(epd_ctx_t* ctx,
@@ -315,11 +314,9 @@ void epd_2in9_draw_filled_rect(epd_ctx_t* ctx,
                                uint16_t width,
                                uint16_t height,
                                uint8_t color) {
-    for (uint16_t i = 0; i < height; i++) {
-        for (uint16_t j = 0; j < width; j++) {
+    for (uint16_t i = 0; i < height; i++)
+        for (uint16_t j = 0; j < width; j++)
             epd_2in9_draw_pixel(ctx, x + j, y + i, color);
-        }
-    }
 }
 
 void epd_2in9_draw_char(epd_ctx_t* ctx,
@@ -335,9 +332,9 @@ void epd_2in9_draw_char(epd_ctx_t* ctx,
     for (uint8_t col = 0; col < 5; col++) {
         uint8_t line = glyph[col];
         for (uint8_t row = 0; row < 8; row++) {
-            if (line & 0x01) {
+            if (line & 0x01)
                 epd_2in9_draw_pixel(ctx, x + col, y + row, color);
-            }
+
             line >>= 1;
         }
     }
@@ -349,7 +346,7 @@ void epd_2in9_draw_str(epd_ctx_t* ctx,
                        const char* str,
                        uint8_t color) {
     uint16_t cur_x = x;
-    while (*str) {
+    while (*str != '\0') {
         epd_2in9_draw_char(ctx, cur_x, y, *str, color);
         cur_x += 6;
         str++;
